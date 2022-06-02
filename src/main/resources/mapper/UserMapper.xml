@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luyouqi.mcommunity.mapper.UserMapper">
+
+    <resultMap id="UserAndRole" type="com.luyouqi.mcommunity.entity.User">
+        <id column="u_id" property="uId"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="nickname" property="nickname"/>
+        <result column="state" property="state"/>
+        <result column="email" property="email"/>
+        <result column="reg_time" property="regTime"/>
+        <result column="userFace" property="userFace"/>
+        <result column="motto" property="motto"/>
+        <collection property="roles" ofType="com.luyouqi.mcommunity.entity.Role">
+            <id column="r_id" property="rId"/>
+            <result column="name" property="name"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectByUserName" parameterType="string" resultMap="UserAndRole">
+        SELECT u.*,r.r_id,r.name
+        FROM `user` u
+        LEFT JOIN user_role ur ON u.u_id = ur.u_id
+        LEFT JOIN role r ON ur.r_id = r.r_id
+        WHERE u.username = #{username}
+    </select>
+
+    <select id="getFriendsByUserId" parameterType="string" resultType="com.luyouqi.mcommunity.entity.User">
+        SELECT DISTINCT u2.* FROM `user` u
+        LEFT JOIN `friends` f ON u.`u_id`=f.`u_id_from` OR u.`u_id`=f.`u_id_to`
+        LEFT JOIN `user` u2 ON f.`u_id_to`=u2.`u_id` OR f.`u_id_from`=u2.`u_id`
+        WHERE u.`u_id`=#{userId} AND u2.`u_id` != #{userId}
+    </select>
+
+
+    <select id="test" parameterType="string" resultType="string">
+        SELECT 'name' FROM `user` WHERE u_id = #{id}
+    </select>
+
+</mapper>

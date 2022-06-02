@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luyouqi.mcommunity.mapper.ChatroomMapper">
+
+    <select id="selectRoomsByUserId" parameterType="string" resultType="com.luyouqi.mcommunity.entity.Chatroom">
+            SELECT c.* FROM `user` u
+            LEFT JOIN `user_room` ur ON u.`u_id` = ur.`u_id`
+            LEFT JOIN `chatroom` c ON ur.`r_id`=c.`r_id`
+            WHERE u.u_id = #{id}
+    </select>
+</mapper>
